@@ -7,7 +7,7 @@ ddosers não serão tolerados.
 
 # Creditos:
 WhiteR0aper
---
+
 Mark 
---
+
 E um agradecimento especial para a equipe da duino-coin pela inspiração (Uma parte dos sistemas são derivados da duino).
