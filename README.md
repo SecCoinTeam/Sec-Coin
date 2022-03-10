@@ -1,7 +1,7 @@
 # Sec-Coin
 Uma moeda simples e segura
 
-Obs: Caso O binario não funcione rode use o .py B)
+Obs: Caso O binario não funcione rode o .py B)
 
 ddosers não serão tolerados.
 
