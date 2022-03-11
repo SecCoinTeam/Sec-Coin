@@ -10,6 +10,7 @@ A SecCoin pode ser minerada de uma super máquina e até mesmo de um simples ard
 
 # Creditos:
 <a href="https://github.com/WhiteR0aper/">WhiteR0aper</a> (Main Dev (CEO)).
+<br>
 <a href="https://github.com/MarktwainSTDLL/">Mark Security</a> (Web developer and miner constructor (DEV)).
 
 -> Créditos da source: A nossa moeda foi inspirada e criada em cima da source da Duino-coin, portanto os nossos créditos são voltados para a equipe da Duino-coin.
