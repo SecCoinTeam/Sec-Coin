@@ -1,0 +1,8 @@
+{
+    "help": " - shows this help message",
+    "refresh": " - refresh balance",
+    "send": " - send funds",
+    "changepass": " - changes account password",
+    "exit": " - exit Duino-Coin wallet",
+    "logout": " - logs off the user\n"
+}
