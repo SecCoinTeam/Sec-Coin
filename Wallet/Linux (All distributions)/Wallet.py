@@ -110,7 +110,7 @@ iterations = 100_000
 timeout = 30  
 VER = 2.45
 use_wrapper = False
-WS_URI = "ws://159.65.220.57:14808"
+WS_URI = "ws://159.65.220.57:1337"
 
 config = configparser.ConfigParser()
 
