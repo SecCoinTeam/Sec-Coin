@@ -6,7 +6,7 @@ A SecCoin pode ser minerada de uma super máquina e até mesmo de um simples ard
 
 # Bugs e Falhas
 
-11/03/2022 -> Alguns bugs estão ocorrendo na mineradora e será lançado um novo patch de correção da mineradora com atualizações. (broken pipe error).
+11/03/2022 -> Alguns bugs estão ocorrendo na mineradora e será lançado um novo patch de correção da mineradora com atualizações. (broken pipe error). => Fixed: By WhiteR0paer
 
 # Creditos:
 <a href="https://github.com/WhiteR0aper/">WhiteR0aper</a> (Main Dev (CEO)).
