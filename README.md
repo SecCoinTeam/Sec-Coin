@@ -8,6 +8,12 @@ A SecCoin pode ser minerada de uma super máquina e até mesmo de um simples ard
 
 11/03/2022 -> Alguns bugs estão ocorrendo na mineradora e será lançado um novo patch de correção da mineradora com atualizações. (broken pipe error). => Fixed: By WhiteR0paer
 
+# Sistema de Recompensa
+
+Nosso sistema de recompensa e focado em mineração pela cpu e para sistemas com pouco poder computacional Então não é lucrativo fazer uma farm. Para minerar sec ou minerar com uma placa de video.
+
+Você pode minerar (por enquanto) usando um Arduino ou um pc porem e mais lucrativo (e recomendado) minerar pelo Arduino.
+
 # Creditos:
 <a href="https://github.com/WhiteR0aper/">WhiteR0aper</a> (Main Dev (CEO)).
 <br>
