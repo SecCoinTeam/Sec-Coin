@@ -1,81 +1,115 @@
+import hashlib
 import os
 import socket
-import sys  
+import sys  # Only python3 included libraries
 import time
-import xxhash  
+import ssl
+import select
 
-soc = socket.socket()
-soc.settimeout(10)
+AVAILABLE_PORTS = [2811]
+soc = None
 
-username = input("Enter your SecCoin name: ")
+username = input('Username?\n> ')
+diff_choice = input(
+    'Usar uma dificuldade baixa?[Use caso tiver um pc fraco]\n> ')
+if diff_choice.lower == "n":
+    NoDif = False
+else:
+    NoDif = True
+
+
+def get_fastest_connection(server_ip: str):
+    connection_pool = []
+    available_connections = []
+    for i in range(len(AVAILABLE_PORTS)):
+        connection_pool.append(socket.socket())
+        connection_pool[i].setblocking(0)
+        try:
+            connection_pool[i].connect((server_ip,
+                                        AVAILABLE_PORTS[i]))
+        except BlockingIOError as e:
+            pass
+
+    ready_connections, _, __ = select.select(connection_pool, [], [])
+
+    while True:
+        for connection in ready_connections:
+            try:
+                server_version = connection.recv(100)
+            except:
+                continue
+            if server_version == b'':
+                continue
+
+            available_connections.append(connection)
+            connection.send(b'PING')
+
+        ready_connections, _, __ = select.select(available_connections, [], [])
+        ready_connections[0].recv(100)
+        ready_connections[0].settimeout(10)
+        return ready_connections[0]
+
 
 while True:
     try:
+        print('Searching for fastest connection to the server')
+        soc = get_fastest_connection(str("159.65.220.57"))
+        print('Fastest connection found')
 
-        soc.connect((str("159.65.220.57"), int("2811")))
-        server_version = soc.recv(3).decode()  
-        print("Server is on version", server_version)
-
-        
+        # Mining section
         while True:
-            
-            soc.send(bytes(
-                "JOBXX,"
-                + str(username)
-                + ",NET",
-                encoding="utf8"))
-            
-            job = soc.recv(1024).decode().rstrip("\n")
+            if NoDif:
+                # Send job request for lower diff
+                soc.send(bytes(
+                    "JOB,"
+                    + str(username)
+                    + ",MEDIUM",
+                    encoding="utf8"))
+            else:
+                soc.send(bytes(
+                    "JOB,"
+                    + str(username),
+                    encoding="utf8"))
 
+            job = soc.recv(1024).decode().rstrip("\n")
             job = job.split(",")
             difficulty = job[2]
 
             hashingStartTime = time.time()
-            for ducos1xxres in range(100 * int(difficulty) + 1):
-                
-                ducos1xx = xxhash.xxh64(
-                    str(job[0])
-                    + str(ducos1xxres),
-                    seed=2811).hexdigest()
+            base_hash = hashlib.sha1(str(job[0]).encode('ascii'))
+            temp_hash = None
 
-                
-                if job[1] == ducos1xx:
+            for result in range(100 * int(difficulty) + 1):
+                temp_hash = base_hash.copy()
+                temp_hash.update(str(result).encode('ascii'))
+                algo = temp_hash.hexdigest()
+
+                if job[1] == algo:
                     hashingStopTime = time.time()
                     timeDifference = hashingStopTime - hashingStartTime
-                    hashrate = ducos1xxres / timeDifference
+                    hashrate = result / timeDifference
 
-                    
                     soc.send(bytes(
-                        str(ducos1xxres)
+                        str(result)
                         + ","
-                        + str(hashrate) +
-                        ",Minimal PC Miner (XXHASH)",
+                        + str(hashrate)
+                        + ",SecCoin Miner",
                         encoding="utf8"))
 
-                    
                     feedback = soc.recv(1024).decode().rstrip("\n")
-                    
                     if feedback == "GOOD":
-                        print("Accepted share",
-                              ducos1xxres,
-                              "Hashrate",
+                        print("Hashrate",
                               int(hashrate/1000),
-                              "kH/s",
-                              "Difficulty",
-                              difficulty)
+                              "kH/s",)
                         break
-                    
                     elif feedback == "BAD":
-                        print("Rejected share",
-                              ducos1xxres,
-                              "Hashrate",
+                        print("Hashrate",
                               int(hashrate/1000),
-                              "kH/s",
-                              "Difficulty",
-                              difficulty)
+                              "kH/s")
                         break
+        
 
     except Exception as e:
-        print("Error occured: " + str(e) + ", restarting in 5s.")
+        print("Error: " + str(e) + ", restarting in 5s.")
         time.sleep(5)
-        os.execv(sys.argv[0], sys.argv)
+        os.execl(sys.executable, sys.executable, *sys.argv)
