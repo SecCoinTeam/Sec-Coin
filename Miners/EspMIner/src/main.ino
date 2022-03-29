@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h> // Include WiFi library
-#include <ESP8266mDNS.h> // OTA libraries
+#include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-#include <Crypto.h>  // experimental SHA1 crypto library
+#include <Crypto.h>
 using namespace experimental::crypto;
 
 namespace {
@@ -142,12 +142,10 @@ namespace {
     if (client.connected())
       return;
 
-    Serial.println("\nConectando Ao servidor principal");
     if (!client.connect(host, port)) 
       RestartESP("Connection failed.");
   
     waitForClientData();
-    Serial.println("Connected to the server. Server version: " + clientBuffer );
     blink(BLINK_CLIENT_CONNECT); // Blink 3 times - indicate sucessfull connection with the server
   }
 
@@ -164,9 +162,6 @@ namespace {
 } // namespace
 
 void setup() {
-  Serial.begin(115200); // Start serial connection
-  Serial.println("\nSec-Coin ESP8266 Miner v2.4.6");
-
   pinMode(LED_BUILTIN, OUTPUT); // prepare for blink() function
 
   SetupWifi();
@@ -180,16 +175,12 @@ void loop() {
   ArduinoOTA.handle(); // Enable OTA handler
   ConnectToServer();
 
-  Serial.println("Asking for a new job for user: " + String(ducouser));
-
   client.print("JOB," + String(ducouser) + ",ESP8266"); // Ask for new job
   waitForClientData();
 
   String hash = getValue(clientBuffer, SEP_TOKEN, 0); // Read data to the first peroid - last block hash
   String job = getValue(clientBuffer, SEP_TOKEN, 1); // Read data to the next peroid - expected hash
   unsigned int diff = getValue(clientBuffer, SEP_TOKEN, 2).toInt() * 100 + 1; // Read and calculate remaining data - difficulty
-  Serial.println("Job received: " + hash + " " + job + " " + String(diff));
-
   job.toUpperCase();
 
   float StartTime = micros(); // Start time measurement
@@ -207,7 +198,6 @@ void loop() {
       waitForClientData();
 
       Shares++;
-      Serial.println(clientBuffer + " share #" + String(Shares) + " (" + String(iJob) + ")" + " Hashrate: " + String(HashRate) + " Free RAM: " + String(ESP.getFreeHeap()));
       blink(BLINK_SHARE_FOUND);
       break; // Stop and ask for more work
     }
