@@ -1,3 +1,4 @@
+// creditos Sec Coin & Duino Coin Team
 #include <Arduino.h>
 #include <ESP8266WiFi.h> // Include WiFi library
 #include <ESP8266mDNS.h>
@@ -7,12 +8,12 @@
 using namespace experimental::crypto;
 
 namespace {
-  const char* ssid          = "WiFi SSID";   // Change this to your WiFi SSID
-  const char* password      = "WiFi Pass";    // Change this to your WiFi password
-  const char* ducouser      = "DUCO Username";     // Change this to your Duino-Coin username
-  const char* rigIdentifier = "None";       // Change this if you want a custom miner name
+  const char* ssid          = "WiFi SSID";  
+  const char* password      = "WiFi Pass";    
+  const char* ducouser      = "Sec Username";     
+  const char* rigIdentifier = "None";       
 
-  const char * host = "159.65.220.57"; // Static server IP
+  const char * host = "159.65.220.57"; 
   const int port = 2811;
   unsigned int Shares = 0; // Share variable
 
@@ -31,8 +32,8 @@ namespace {
 
   void SetupWifi() {
     Serial.println("Connecting to: " + String(ssid));
-    WiFi.mode(WIFI_STA); // Setup ESP in client mode
-    WiFi.begin(ssid, password); // Connect to wifi
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password); i
 
     int wait_passes = 0;
     while (WiFi.waitForConnectResult() != WL_CONNECTED) {
@@ -67,7 +68,7 @@ namespace {
       else if (error == OTA_END_ERROR) Serial.println("End Failed");
     });
 
-    ArduinoOTA.setHostname(rigIdentifier); // Give port a name not just address
+    ArduinoOTA.setHostname(rigIdentifier); 
     ArduinoOTA.begin();
   }
 
@@ -146,7 +147,7 @@ namespace {
       RestartESP("Connection failed.");
   
     waitForClientData();
-    blink(BLINK_CLIENT_CONNECT); // Blink 3 times - indicate sucessfull connection with the server
+    blink(BLINK_CLIENT_CONNECT); 
   }
 
   bool max_micros_elapsed(unsigned long current, unsigned long max_elapsed) {
@@ -162,12 +163,12 @@ namespace {
 } // namespace
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT); // prepare for blink() function
+  pinMode(LED_BUILTIN, OUTPUT); 
 
   SetupWifi();
   SetupOTA();
 
-  blink(BLINK_SETUP_COMPLETE); // Blink 2 times - indicate sucessfull connection with wifi network
+  blink(BLINK_SETUP_COMPLETE); 
 }
 
 void loop() {
@@ -178,9 +179,9 @@ void loop() {
   client.print("JOB," + String(ducouser) + ",ESP8266"); // Ask for new job
   waitForClientData();
 
-  String hash = getValue(clientBuffer, SEP_TOKEN, 0); // Read data to the first peroid - last block hash
-  String job = getValue(clientBuffer, SEP_TOKEN, 1); // Read data to the next peroid - expected hash
-  unsigned int diff = getValue(clientBuffer, SEP_TOKEN, 2).toInt() * 100 + 1; // Read and calculate remaining data - difficulty
+  String hash = getValue(clientBuffer, SEP_TOKEN, 0); 
+  String job = getValue(clientBuffer, SEP_TOKEN, 1);
+  unsigned int diff = getValue(clientBuffer, SEP_TOKEN, 2).toInt() * 100 + 1; 
   job.toUpperCase();
 
   float StartTime = micros(); // Start time measurement
@@ -194,7 +195,7 @@ void loop() {
       float ElapsedTimeSeconds = ElapsedTime * .000001f; // Convert to seconds
       float HashRate = iJob / ElapsedTimeSeconds;
 
-      client.print(String(iJob) + "," + String(HashRate) + ",ESP8266 Miner v1.0" + "," + String(rigIdentifier)); // Send result to server
+      client.print(String(iJob) + "," + String(HashRate) + ",ESP8266 Miner v1.0" + "," + String(rigIdentifier)); r
       waitForClientData();
 
       Shares++;
